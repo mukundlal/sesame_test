@@ -1,8 +1,18 @@
 package com.cmlabs.sesame_test.ui
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import com.cmlabs.sesame_test.R
 import com.cmlabs.sesame_test.common.hide
 import com.cmlabs.sesame_test.common.show
@@ -13,16 +23,59 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddCustomerActivity : AppCompatActivity() {
+class AddCustomerActivity : AppCompatActivity(),LocationListener {
+
+    var lat:Double=0.0
+    var lng:Double=0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_customer)
         addProgress.hide()
 
         btnAddCustomer.setOnClickListener {
+            if (lat!=0.0&&lng!=0.0)
             addCustomer()
+            else
+           Toast.makeText(this,"Location not updated yet",Toast.LENGTH_SHORT).show()
         }
 
+        btnGetLocation.setOnClickListener {
+            getCurrentLocationGPS()
+
+
+        }
+
+    }
+
+
+
+
+    private fun getCurrentLocationGPS() {
+        val locationManager =getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ),
+                1000
+            )
+
+        }else
+        {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,0.0f , this)
+
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getCurrentLocationGPS()
     }
 
     private fun addCustomer() {
@@ -33,8 +86,8 @@ class AddCustomerActivity : AppCompatActivity() {
             RetrofitClient.apiInterface.addCustomer(cusName = etCustomerName.text.toString(),
             cusAdress = etAddress.text.toString(),
             phoneNo = etMobile.text.toString(),
-            lat = "15.0",
-            lng = "17.8")
+            lat = "$lat",
+            lng = "$lng")
                 .enqueue(object : Callback<CustomerAddResponse>{
                     override fun onResponse(
                         call: Call<CustomerAddResponse>,
@@ -67,5 +120,18 @@ class AddCustomerActivity : AppCompatActivity() {
         {
             //Exception
         }
+    }
+
+    override fun onLocationChanged(p0: Location) {
+       try {
+
+            lat=p0.latitude
+           lng=p0.longitude
+           Toast.makeText(this,"$lat,$lng",Toast.LENGTH_SHORT).show()
+       }catch (
+           e:java.lang.Exception
+       )
+       {}
+
     }
 }
