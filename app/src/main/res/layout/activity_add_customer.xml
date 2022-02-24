@@ -70,9 +70,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Get Current Location"
+        android:text="Update Current Location"
         app:layout_constraintEnd_toEndOf="@+id/etMobile"
-        app:layout_constraintTop_toBottomOf="@+id/etMobile" />
+        app:layout_constraintTop_toBottomOf="@+id/latlang" />
 
     <ProgressBar
         android:id="@+id/addProgress"
@@ -83,4 +83,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGetLocation" />
+
+    <TextView
+        android:id="@+id/latlang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/etMobile"
+        app:layout_constraintTop_toBottomOf="@+id/etMobile" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,13 +25,13 @@ import retrofit2.Response
 
 class AddCustomerActivity : AppCompatActivity(),LocationListener {
 
-    var lat:Double=0.0
-    var lng:Double=0.0
+    var lat:Double=28.644800
+    var lng:Double=77.216721
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_customer)
         addProgress.hide()
-
+        latlang.text="latitude : $lat\nlongitude : $lng"
         btnAddCustomer.setOnClickListener {
             if (lat!=0.0&&lng!=0.0)
             addCustomer()
@@ -125,9 +125,11 @@ class AddCustomerActivity : AppCompatActivity(),LocationListener {
     override fun onLocationChanged(p0: Location) {
        try {
 
-            lat=p0.latitude
+           lat=p0.latitude
            lng=p0.longitude
-           Toast.makeText(this,"$lat,$lng",Toast.LENGTH_SHORT).show()
+           latlang.text="latitude : $lat\nlongitude : $lng"
+
+
        }catch (
            e:java.lang.Exception
        )
